@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.spyderproject
+.spyproject
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data & Models (large files)
+models/*.joblib
+models/*.pkl
+models/*.h5
+data/*.csv
+!data/sample_*.csv
+tests/data/*.csv
+!tests/data/iris.csv
+!tests/data/housing.csv
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Test cache
+.pytest_cache/
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+
+# Streamlit
+.streamlit/
+
+# Misc
+*.log
