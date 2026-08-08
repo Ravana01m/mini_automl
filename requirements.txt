@@ -1,0 +1,31 @@
+# Core ML
+# scikit-learn is capped below 1.6: scikeras 0.13.0 (latest available) does not
+# support sklearn's __sklearn_tags__ API introduced in 1.6, which silently breaks
+# NeuralNetwork training on every run under an unpinned "<1.7" range.
+scikit-learn>=1.5.0,<1.6
+xgboost>=2.1.0,<3.0
+lightgbm>=4.4.0,<5.0
+tensorflow-cpu>=2.19.0,<3.0
+scikeras>=0.13.0,<1.0
+
+# Tuning
+optuna>=3.6.0,<4.0
+
+# Explainability
+shap>=0.45.0,<1.0
+
+# App
+streamlit>=1.35.0,<2.0
+plotly>=5.22.0,<6.0
+
+# Data
+pandas>=2.2.0,<3.0
+numpy>=1.26.0,<3.0
+# category-encoders 2.8+ requires scikit-learn>=1.6, which conflicts with the
+# scikit-learn cap above -- keep it on the last release that supports sklearn<1.6.
+category-encoders>=2.6.0,<2.8
+joblib>=1.4.0,<2.0
+
+# EDA / Visualization
+matplotlib>=3.9.0,<4.0
+seaborn>=0.13.0,<1.0
