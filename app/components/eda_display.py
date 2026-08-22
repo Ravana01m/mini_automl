@@ -62,4 +62,18 @@ def render_eda_tab(eda_report: dict[str, Any] | None) -> None:
     stats = eda_report.get("stats")
     if stats is not None:
         st.subheader("Descriptive Statistics")
-        st.dataframe(stats, use_container_width=True)
+        st.dataframe(stats, width="stretch")
+
+    corr_tables = eda_report.get("correlation_tables") or {}
+    if corr_tables:
+        st.subheader("Correlation analysis (EDA only)")
+        st.caption(corr_tables.get("note", ""))
+        if corr_tables.get("target") is not None and not getattr(corr_tables.get("target"), "empty", True):
+            st.write("Feature–target correlations")
+            st.dataframe(corr_tables["target"].head(15), width="stretch")
+        if corr_tables.get("pairs") is not None and not getattr(corr_tables.get("pairs"), "empty", True):
+            st.write("Strongest feature–feature pairs")
+            st.dataframe(corr_tables["pairs"].head(15), width="stretch")
+    if eda_report.get("pairplot_fig") is not None:
+        st.subheader("Pairplot (sampled)")
+        st.pyplot(eda_report["pairplot_fig"])

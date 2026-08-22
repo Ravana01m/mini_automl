@@ -25,6 +25,11 @@ def render_shap_tab(explainer: object | None) -> None:
         st.pyplot(summary_fig)
     except Exception as e:
         st.warning(f"Could not generate summary plot: {e}")
+    if hasattr(explainer, "bar_plot"):
+        try:
+            st.pyplot(explainer.bar_plot())
+        except Exception as e:
+            st.warning(f"Could not generate SHAP bar plot: {e}")
     
     # Per-prediction explanation
     st.markdown("---")
@@ -45,3 +50,8 @@ def render_shap_tab(explainer: object | None) -> None:
         st.pyplot(waterfall_fig)
     except Exception as e:
         st.warning(f"Could not generate waterfall plot: {e}")
+    if hasattr(explainer, "local_contributors"):
+        contrib = explainer.local_contributors(sample_idx)
+        if contrib is not None and not contrib.empty:
+            st.write("Local contributors")
+            st.dataframe(contrib, width="stretch")
