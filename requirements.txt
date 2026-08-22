@@ -1,8 +1,10 @@
 # Core ML
-scikit-learn>=1.5.0,<1.7
+# scikit-learn is capped below 1.6: scikeras 0.13.0 does not support
+# sklearn's __sklearn_tags__ API introduced in 1.6.
+scikit-learn>=1.5.0,<1.6
 xgboost>=2.1.0,<3.0
 lightgbm>=4.4.0,<5.0
-tensorflow-cpu>=2.19.0,<3.0
+tensorflow-cpu>=2.16.0,<3.0
 scikeras>=0.13.0,<1.0
 
 # Tuning
@@ -11,6 +13,9 @@ optuna>=3.6.0,<4.0
 # Explainability
 shap>=0.45.0,<1.0
 
+# Imbalance (used inside CV pipelines only)
+imbalanced-learn>=0.12.0,<0.14
+
 # App
 streamlit>=1.35.0,<2.0
 plotly>=5.22.0,<6.0
@@ -18,7 +23,9 @@ plotly>=5.22.0,<6.0
 # Data
 pandas>=2.2.0,<3.0
 numpy>=1.26.0,<3.0
-category-encoders>=2.6.0,<3.0
+scipy>=1.11.0,<2.0
+# category-encoders 2.8+ requires scikit-learn>=1.6
+category-encoders>=2.6.0,<2.8
 joblib>=1.4.0,<2.0
 
 # EDA / Visualization

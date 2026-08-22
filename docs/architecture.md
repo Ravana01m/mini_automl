@@ -1,29 +1,50 @@
 # Architecture
 
-See the Mermaid diagram in the main [README.md](../README.md#architecture).
+Mini AutoML is a leakage-safe research platform. Every learned transform lives inside an sklearn-compatible pipeline and is refit on each cross-validation fold.
 
-## Module Responsibilities
+```
+Raw CSV
+  → Validation
+  → Profiling / EDA (exploratory only)
+  → Train / test split
+  → Per-model pipeline
+        Column pruning (train stats)
+        Datetime extraction
+        Outlier bounds (train stats)
+        Family-aware preprocess
+        Feature engineering
+        Feature selection
+        Optional oversampling
+        Estimator
+  → Staged model search + CV
+  → Optional ensemble
+  → Held-out evaluation
+  → SHAP / model card / serialization
+```
+
+## Module responsibilities
 
 | Module | Responsibility |
 |---|---|
-| `detector.py` | Auto-detect classification vs regression from target column |
-| `eda.py` | Generate automated EDA report (distributions, correlations, missing values) |
-| `preprocessing.py` | Build dynamic ColumnTransformer (imputation, encoding, scaling) |
-| `feature_engineering.py` | Auto feature construction (polynomial, datetime, log, interactions) |
-| `feature_selection.py` | Variance threshold + correlation filter + SelectKBest |
-| `model_registry.py` | Registry of 6 classification + 6 regression model configs |
-| `ann_builder.py` | Keras model factory for ANN classifier/regressor |
-| `trainer.py` | Cross-validated training, GridSearchCV, Optuna tuning |
-| `explainer.py` | SHAP global + local explanations |
-| `pipeline_builder.py` | Orchestrator: assembles full sklearn Pipeline |
-| `utils.py` | Validation, logging, error handling helpers |
+| `config.py` | Experiment configuration and global seeds |
+| `profiling.py` | Structured `DataProfile` |
+| `quality.py` | Outliers and uninformative-column pruning |
+| `preprocessing.py` | Family-aware ColumnTransformer |
+| `feature_engineering.py` | Log, datetime, polynomial, interactions, bins |
+| `feature_selection.py` | Variance, correlation, MI, model-based selection |
+| `sampling.py` | CV-safe SMOTE / random oversampling |
+| `model_registry.py` | Model zoo with family metadata |
+| `ann_builder.py` | SciKeras ANN with `val_loss` early stopping |
+| `trainer.py` | Staged search, GridSearch, Optuna |
+| `evaluation.py` / `diagnostics.py` | Metrics and residual / class plots |
+| `explainer.py` | SHAP with failure isolation |
+| `pipeline_builder.py` | Orchestrator |
+| `serialization.py` | Save / load / predict on raw frames |
+| `experiment.py` | Local JSON + SQLite history |
 
-## Data Flow
+## Leakage rules
 
-```
-Raw CSV → detect_task_type() → generate_eda_report()
-       → build_preprocessor() → build_feature_engineer()
-       → build_feature_selector() → get_models()
-       → train_and_evaluate() → tune_top_models()
-       → explain_model() → export_pipeline()
-```
+- Split before fitting anything that learns parameters.
+- EDA correlation is never used as the CV selection decision.
+- Oversampling is never applied to validation or test folds.
+- ANN early stopping monitors validation loss, not training loss.

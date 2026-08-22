@@ -52,5 +52,11 @@ htmlcov/
 # Streamlit
 .streamlit/
 
+# Local experiment history
+experiments/*.sqlite
+experiments/*.jsonl
+reports/*.md
+.cursor_write_probe.txt
+
 # Misc
 *.log
